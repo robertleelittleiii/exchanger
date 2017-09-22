@@ -20,7 +20,7 @@ module Exchanger
       :inbox, :outbox, :drafts, :deleteditems, :sentitems, :junkemail,
       :calendar, :contacts, :tasks, :notes, :journal,
       :msgfolderroot, :publicfoldersroot, :root,
-      :searchfolders, :voicemail
+      :searchfolders, :voicemail, :directory, :mycontacts, :quickcontacts
     ]
 
     def self.find(id, email_address = nil)

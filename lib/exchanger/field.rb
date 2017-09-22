@@ -19,9 +19,9 @@ module Exchanger
     def sub_field
       if type.is_a?(Array)
         Field.new(name, {
-          :type => type[0],
-          :field_uri_namespace => field_uri
-        })
+            :type => type[0],
+            :field_uri_namespace => field_uri
+          })
       end
     end
 
@@ -57,17 +57,92 @@ module Exchanger
     def to_xml_updates(value)
       return if options[:readonly]
       doc = Nokogiri::XML::Document.new
+#      puts("* ( ) " * 10)
+#      puts(value.class)
+#      puts(value.inspect)
+#      if  value.is_a?(Array) then 
+#        puts(value[0].class)
+#        puts(value[0].inspect)
+#      end
+#      puts("* ( ) " * 10)
+#      
+#      
       if value.is_a?(Array)
         value.each do |sub_value|
-          sub_field.to_xml_updates(sub_value) do |field_uri_xml, element_xml|
-            element_wrapper = doc.create_element(sub_field.tag_name)
-            element_wrapper << element_xml
-            yield [
-              field_uri_xml,
-              element_wrapper
-            ]
+#          if false and sub_value.is_a?(Exchanger::CategoryString) then
+#            puts("- * & " * 10)
+#            puts("found category string")
+#            puts(sub_value.inspect)
+#            puts(sub_value.tag_name)
+#            puts(sub_value.text)
+#            puts("- * & " * 10)
+#            element_wrapper=""
+#            category_array = sub_value.text.split(",") rescue []
+#            category_array.each do |array_item|
+#              element_wrapper = doc.create_element(sub_value.tag_name)
+#              puts(element_wrapper.to_xml)
+#              element_wrapper << array_item
+#            end
+#            
+#            puts(doc.to_xml)
+#            puts(element_wrapper)
+#
+#            yield [
+#              field_uri,
+#              element_wrapper
+#            ]
+#            
+#          else
+            sub_field.to_xml_updates(sub_value) do |field_uri_xml, element_xml|
+              element_wrapper = doc.create_element(sub_field.tag_name)
+              element_wrapper << element_xml
+              yield [
+                field_uri_xml,
+                element_wrapper
+              ]
+            end
           end
+#        end
+      elsif value.is_a?(Exchanger::CategoryString)  #  Categories doesn't follow any other structure so we will create an exception
+#        puts("catetory string")
+#        puts(value.text)
+#        puts(value.text.class)
+#        puts(value.inspect)
+#        sub_value_array = eval(value.text) rescue []
+#        puts(sub_value_array.inspect)
+        
+        # create a category structure with an array of strings.
+        new_node = doc.create_element("Categories")
+        value.text.each do |array_element|
+          new_node.add_child(doc.create_element("String",array_element))
         end
+        
+#        puts(self.to_xml_field_uri(value).inspect)
+        
+        #Create the field URI manually for categories
+        
+        new_field_uri = doc.create_element("FieldURI")
+        new_field_uri["FieldURI"] = "item:Categories"
+        
+        yield [
+          new_field_uri,
+          new_node.children
+        ]
+        
+        
+        #        sub_field.to_xml_updates(sub_value_array) do |field_uri_xml, element_xml|
+        #              element_wrapper = doc.create_element(sub_field.tag_name)
+        #              element_wrapper << element_xml
+        #              yield [
+        #                field_uri_xml,
+        #                element_wrapper
+        #              ]
+        #            end
+        #            
+        #         yield [
+        #          self.to_xml_field_uri(value),
+        #          self.to_xml(value)
+        #        ]
       elsif value.is_a?(Exchanger::Element)
         value.tag_name = tag_name
         if value.class.elements.keys.include?(:text)

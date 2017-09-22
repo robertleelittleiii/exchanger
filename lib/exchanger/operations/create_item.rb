@@ -24,6 +24,10 @@ module Exchanger
       def to_xml
         Nokogiri::XML::Builder.new do |xml|
           xml.send("soap:Envelope", "xmlns:soap" => NS["soap"], "xmlns:t" => NS["t"], "xmlns:xsi" => NS["xsi"], "xmlns:xsd" => NS["xsd"]) do
+            xml.send("soap:Header") do 
+              xml.send("t:RequestServerVersion", "Version" => "Exchange2013","xmlns"=>"http://schemas.microsoft.com/exchange/services/2006/types", "soap:mustUnderstand"=>"0" ) do
+              end
+            end
             xml.send("soap:Body") do
               xml.CreateItem(create_item_attributes) do
                 xml.SavedItemFolderId do
@@ -55,11 +59,11 @@ module Exchanger
 
       private
 
-        def create_item_attributes
-          create_item_attributes = { "xmlns" => NS["m"] }
-          create_item_attributes["SendMeetingInvitations"] = send_meeting_invitations if send_meeting_invitations
-          create_item_attributes
-        end
+      def create_item_attributes
+        create_item_attributes = { "xmlns" => NS["m"] }
+        create_item_attributes["SendMeetingInvitations"] = send_meeting_invitations if send_meeting_invitations
+        create_item_attributes
+      end
     end
 
     class Response < Operation::Response

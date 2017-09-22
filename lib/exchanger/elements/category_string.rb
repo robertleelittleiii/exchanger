@@ -3,7 +3,8 @@ module Exchanger
   #
   # https://msdn.microsoft.com/en-us/library/aa565683(v=exchg.150).aspx
   class CategoryString < Element
-    element :text
+    self.field_uri_namespace = :"item:Categories"
+    element :text , :type => String
 
     def tag_name
       "String"
@@ -12,6 +13,6 @@ module Exchanger
     # For backwards compatibility in GetItem requests, we will continue to return a String instead of an Exchanger::CategoryString.
     def self.new_from_xml(xml)
       super.text
-    end
+    end   
   end
 end

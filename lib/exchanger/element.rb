@@ -140,6 +140,12 @@ module Exchanger
             if element_xml.text.present?
               set_item_field = doc.create_element("SetItemField")
               set_item_field << field_uri_xml
+#              puts(" - - -  -" * 10)
+#              puts(element_xml)
+#              puts(name)
+#              puts(value)
+#              puts(field.inspect)
+#              puts(" - - -  -" * 10)
               element_wrapper = doc.create_element(tag_name)
               element_wrapper << element_xml
               set_item_field << element_wrapper

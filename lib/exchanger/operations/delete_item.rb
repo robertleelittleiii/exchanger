@@ -11,16 +11,21 @@ module Exchanger
   # http://msdn.microsoft.com/en-us/library/aa580484.aspx
   class DeleteItem < Operation
     class Request < Operation::Request
-      attr_accessor :item_ids, :send_meeting_cancellations
+      attr_accessor :item_ids, :send_meeting_cancellations, :delete_type
 
       # Reset request options to defaults.
       def reset
         @item_ids = []
+        @delete_type = "HardDelete" # MoveToDeletedItems
       end
 
       def to_xml
         Nokogiri::XML::Builder.new do |xml|
           xml.send("soap:Envelope", "xmlns:soap" => NS["soap"], "xmlns:t" => NS["t"], "xmlns:xsi" => NS["xsi"], "xmlns:xsd" => NS["xsd"]) do
+            xml.send("soap:Header") do 
+              xml.send("t:RequestServerVersion", "Version" => "Exchange2013","xmlns"=>"http://schemas.microsoft.com/exchange/services/2006/types", "soap:mustUnderstand"=>"0" ) do
+              end
+            end
             xml.send("soap:Body") do
               xml.DeleteItem(delete_item_attributes) do
                 xml.ItemIds do
@@ -36,11 +41,11 @@ module Exchanger
 
       private
 
-        def delete_item_attributes
-          delete_item_attributes = { "xmlns" => NS["m"], "DeleteType" => "HardDelete" }
-          delete_item_attributes["SendMeetingCancellations"] = send_meeting_cancellations if send_meeting_cancellations
-          delete_item_attributes
-        end
+      def delete_item_attributes
+        delete_item_attributes = { "xmlns" => NS["m"], "DeleteType" => @delete_type }
+        delete_item_attributes["SendMeetingCancellations"] = send_meeting_cancellations if send_meeting_cancellations
+        delete_item_attributes
+      end
     end
 
     class Response < Operation::Response

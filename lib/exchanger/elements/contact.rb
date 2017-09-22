@@ -35,6 +35,7 @@ module Exchanger
     element :spouse_name
     element :surname
     element :wedding_anniversary, :type => Time
+    element :notes
 
     # Marked as private in Outlook?
     def private?

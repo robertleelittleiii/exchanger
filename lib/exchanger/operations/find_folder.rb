@@ -17,9 +17,13 @@ module Exchanger
 
       def to_xml
         Nokogiri::XML::Builder.new do |xml|
-          xml.send("soap:Envelope", "xmlns:soap" => NS["soap"]) do
+          xml.send("soap:Envelope", "xmlns:soap" => NS["soap"],"xmlns" => NS["m"], "xmlns:t" => NS["t"]) do
+            xml.send("soap:Header") do 
+              xml.send("t:RequestServerVersion", "Version" => "Exchange2013","xmlns"=>"http://schemas.microsoft.com/exchange/services/2006/types", "soap:mustUnderstand"=>"0" ) do
+              end
+            end
             xml.send("soap:Body") do
-              xml.FindFolder("xmlns" => NS["m"], "xmlns:t" => NS["t"], "Traversal" => traversal.to_s.camelize) do
+              xml.FindFolder("Traversal" => traversal.to_s.camelize) do
                 xml.FolderShape do
                   xml.send "t:BaseShape", base_shape.to_s.camelize
                 end

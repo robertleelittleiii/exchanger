@@ -15,7 +15,11 @@ module Exchanger
       def to_xml
         Nokogiri::XML::Builder.new do |xml|
           xml.send("soap:Envelope", "xmlns:soap" => NS["soap"], "xmlns:t" => NS["t"], "xmlns:xsi" => NS["xsi"], "xmlns:xsd" => NS["xsd"]) do
-            xml.send("soap:Body") do
+               xml.send("soap:Header") do 
+              xml.send("t:RequestServerVersion", "Version" => "Exchange2013","xmlns"=>"http://schemas.microsoft.com/exchange/services/2006/types", "soap:mustUnderstand"=>"0" ) do
+              end
+            end
+         xml.send("soap:Body") do
               xml.UpdateItem(update_item_attributes) do
                 xml.ItemChanges do
                   items.each do |item|

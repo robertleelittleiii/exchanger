@@ -62,6 +62,8 @@ require "exchanger/elements/calendar_event_details"
 require "exchanger/elements/calendar_event"
 require "exchanger/elements/item_attachment"
 require "exchanger/elements/file_attachment"
+require "exchanger/elements/phone_number_persona"
+require "exchanger/elements/persona"
 
 # Operations
 require "exchanger/operation"
@@ -70,6 +72,14 @@ require "exchanger/operations/find_folder"
 require "exchanger/operations/get_item"
 require "exchanger/operations/find_item"
 require "exchanger/operations/create_item"
+
+require "exchanger/operations/convert_id"
+
+# require "exchanger/operations/get_item"
+require "exchanger/operations/find_people"
+require "exchanger/operations/get_person"
+# require "exchanger/operations/create_item"
+
 require "exchanger/operations/update_item"
 require "exchanger/operations/delete_item"
 require "exchanger/operations/resolve_names"
