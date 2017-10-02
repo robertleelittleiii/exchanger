@@ -29,7 +29,7 @@ module Exchanger
     def identifier
       if self.class.identifier_name
         @identifier ||= self.send(self.class.identifier_name)
-        puts("@identifier: #{@identifier.inspect}")
+        # puts("@identifier: #{@identifier.inspect}")
         @identifier.tag_name = self.class.identifier_name.to_s.camelize if @identifier
         @identifier
       end
